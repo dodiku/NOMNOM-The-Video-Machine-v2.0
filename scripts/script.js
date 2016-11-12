@@ -43,13 +43,13 @@ function setup() {
   serial.open(portName);
 
   // configurations for the PHRASE << new p5.Phrase(name,callback,sequence) >>
-	var sequence = [1,3,0,2,0,1,0,0];
+	var sequence = [1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0];
 	myPhrase = new p5.Phrase('bbox', makeSound, sequence);
 
 	// configurations for the PART
   myPart = new p5.Part();
   myPart.addPhrase(myPhrase);
-  myPart.setBPM(60);
+  myPart.setBPM(56.5);
 }
 
 function draw(){ // currently not in use
@@ -141,7 +141,7 @@ function playVideo(vidNum){
     vid.play();
     vid.onended=function(){
       // videos[vidNum].loop = videos[vidNum].loop - 1;
-      playVideo(vidNum);
+      // playVideo(vidNum); ////// REMOVED FROM ORIGINAL VERSION
     };
 
   }
@@ -192,7 +192,8 @@ var bla = 0;
 function makeSound(time, playbackRate) {
   // mySound.rate(playbackRate);
   // mySound.play(time);
-  playVideo(5);
+  playVideo(0);
+  playVideo(1);
 	bla++;
 	console.log('bla: ' + bla);
 	console.log('got it');
