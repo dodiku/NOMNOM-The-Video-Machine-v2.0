@@ -30,7 +30,10 @@ console.log(videos);
 
 // starting serial communication
 function setup() {
+
   noCanvas();
+
+  // setting up serial communication
   serial = new p5.SerialPort();
   serial.on('connected', serverConnected);
   serial.on('open', portOpen);
@@ -38,10 +41,18 @@ function setup() {
   serial.on('error', serialError);
   serial.list();
   serial.open(portName);
+
+  // configurations for the PHRASE << new p5.Phrase(name,callback,sequence) >>
+	var sequence = [1,3,0,2,0,1,0,0];
+	myPhrase = new p5.Phrase('bbox', makeSound, sequence);
+
+	// configurations for the PART
+  myPart = new p5.Part();
+  myPart.addPhrase(myPhrase);
+  myPart.setBPM(60);
 }
 
-// currently not in use
-function draw(){
+function draw(){ // currently not in use
 }
 
 function serverConnected(){
@@ -176,3 +187,19 @@ function addVideos(){
 }
 
 $(document).ready(addVideos);
+
+var bla = 0;
+function makeSound(time, playbackRate) {
+  // mySound.rate(playbackRate);
+  // mySound.play(time);
+  playVideo(5);
+	bla++;
+	console.log('bla: ' + bla);
+	console.log('got it');
+}
+
+
+function mouseClicked() {
+		myPart.loop();
+    // myPart.start();
+  }
