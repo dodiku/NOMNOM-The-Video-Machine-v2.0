@@ -1,36 +1,48 @@
 /***********************************************************************
-this is the code for the VIDEO MACHINE:
-mid-term itp project by Mint Woraya Boonyapanachoti & Dror Ayalon
+THIS IS THE CODE FOR THE VIDEO MACHINE VERSION 2.
+MID-TERM ITP PROJECT BY MINT WORAYA BOONYAPANACHOTI & DROR AYALON.
+FOR MORE DETAILS GO TO: https://github.com/dodiku/the_video_machine_v2
 ***********************************************************************/
 
-// serial communication variables
+
+/*********************************************
+SERIAL COMMUNICATION VARIABLES
+*********************************************/
 var serial;
 var portName = '/dev/cu.usbmodemFA131';
 
-// video object
-function tv(status, loop, speed, cut, vol) {
-  this.status = status;
-  this.loop = loop;
-  this.speed = speed;
-  this.cut = cut;
-  this.volume = vol;
+
+/*********************************************
+VIDEO OBJECT CONSTRUCTOR
+*********************************************/
+function tv(status, steps, speed, cut, vol) {
+  this.status = status;   // play or stop (0 or 1)
+  this.volume = vol;      // level of amplitude (e.g. 100 == 100% volume)
+  this.speed = speed;     // playback speed (e.g. 0 == regular speed; 50 == x1.5 of regular speed)
+  this.cut = cut;         // video trimming (e.g. 100% == no trimming)
+  this.steps = steps;     // number of steps per bar (e.g. number between 1-4)
 }
 
-// global array of video objects
-var videos = [];
+/*********************************************
+GLOBAL VARIABLES
+*********************************************/
+var videos = [];    // array of video objects
+var newData = [];   // array of new data coming from the Arduino
 
-// global array for new data
-var newData = [];
-
-// initializing video objects and adding them into an array
+// initializing video objects, with default values, and adding them into an array
 for (var i=0; i<16; i++){
   videos.push(new tv(0,5,1, 100, 1));
 }
 console.log(videos);
 
-// starting serial communication
-function setup() {
 
+var currentStep = 0; // holds that index value of current step of the squence array
+
+
+/*********************************************
+SETUP FUNCTION (P5.JS)
+*********************************************/
+function setup() {
   noCanvas();
 
   // setting up serial communication
@@ -43,7 +55,7 @@ function setup() {
   serial.open(portName);
 
   // configurations for the PHRASE << new p5.Phrase(name,callback,sequence) >>
-	var sequence = [1,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0, 1,0,0,0, 0,0,0,0];
+	var sequence = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
 	myPhrase = new p5.Phrase('bbox', makeSound, sequence);
 
 	// configurations for the PART
@@ -52,35 +64,45 @@ function setup() {
   myPart.setBPM(56.5);
 }
 
-function draw(){ // currently not in use
-}
 
+/*********************************************
+SERIAL COMMINICATION CALLBACK FUNCTIONS
+*********************************************/
 function serverConnected(){
-  console.log('server is connected :)))');
+  console.log('server is connected :)');
 }
 
 function portOpen(){
-  console.log('port was opened :))))');
+  console.log('port was opened :)');
 }
 
 function serialError(){
-  console.log('darn! we got an error :((((');
+  console.log('darn! we got an error :((');
 }
 
 function serialEvent(){
   var newData = serial.readStringUntil('\r\n');
   // console.log(newData);
   if (newData.length > 0) {
-    if (newData === 'hello'){
+    if (newData === 'hello'){ // starting the serial communication
       serial.write(1);
     }
     else{
       parseData(newData);
-      // playVideo(newData);
     }
   }
 }
 
+/*********************************************
+DRAW FUNCTION (P5.JS) -- CURRENTLY NOT IN USE
+*********************************************/
+function draw(){
+}
+
+
+/*********************************************
+PARSER FOR THE DATA COMING FROM THE ARDUINO
+*********************************************/
 function parseData(data){
   // parsing the data by ','
   var newStatus = data.split(",");
@@ -128,6 +150,10 @@ function parseData(data){
   serial.write(1);
 }
 
+
+/*********************************************
+PLAYBACK FUNCTIONS: playVideo() + stopVideo()
+*********************************************/
 function playVideo(vidNum){
   var videoElemNum = vidNum+1;
   var videoId = 'video'+videoElemNum;
@@ -174,8 +200,9 @@ function stopVideo(vidNum){
 }
 
 
-
-// appending video files to the page
+/*********************************************
+APPENDING VIDEO ELEMENTS TO THE PAGE
+*********************************************/
 function addVideos(){
   var screenArray = $('.video_screen');
   var url;
@@ -188,15 +215,17 @@ function addVideos(){
 
 $(document).ready(addVideos);
 
-var bla = 0;
+
 function makeSound(time, playbackRate) {
+  console.log('step: ' + currentStep);
+  currentStep++;
+  if (currentStep == 8){
+    currentStep = 0;
+  }
   // mySound.rate(playbackRate);
   // mySound.play(time);
-  playVideo(0);
-  playVideo(1);
-	bla++;
-	console.log('bla: ' + bla);
-	console.log('got it');
+  // playVideo(0);
+  // playVideo(1);
 }
 
 
