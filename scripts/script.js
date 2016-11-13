@@ -18,7 +18,7 @@ VIDEO OBJECT CONSTRUCTOR
 function tv(status, steps, speed, cut, vol) {
   this.status = status;   // play or stop (0 or 1)
   this.volume = vol;      // level of amplitude (e.g. 100 == 100% volume)
-  this.speed = speed;     // playback speed (e.g. 0 == regular speed; 50 == x1.5 of regular speed)
+  this.speed = speed;     // playback speed (e.g. 1 == regular speed; 100 == x2 of regular speed)
   this.cut = cut;         // video trimming (e.g. 100% == no trimming)
   this.steps = steps;     // number of steps per bar (e.g. number between 1-4)
 }
@@ -28,6 +28,7 @@ GLOBAL VARIABLES
 *********************************************/
 var videos = [];    // array of video objects
 var newData = [];   // array of new data coming from the Arduino
+var allVideosPart;  // part object for all video phrases
 
 // initializing video objects, with default values, and adding them into an array
 for (var i=0; i<16; i++){
@@ -54,14 +55,41 @@ function setup() {
   serial.list();
   serial.open(portName);
 
-  // configurations for the PHRASE << new p5.Phrase(name,callback,sequence) >>
-	var sequence = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
-	myPhrase = new p5.Phrase('bbox', makeSound, sequence);
+  // creating a new 'part' object (http://p5js.org/reference/#/p5.Part)
+  allVideosPart = new p5.Part();
+  allVideosPart.setBPM(56.5);
 
-	// configurations for the PART
-  myPart = new p5.Part();
-  myPart.addPhrase(myPhrase);
-  myPart.setBPM(56.5);
+  // adding general phrase (http://p5js.org/reference/#/p5.Phrase) to the 'part'
+  var generalSequence = [1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0, 1,0,0,0];
+  generalPhrase = new p5.Phrase('general', countSteps, generalSequence);
+  allVideosPart.addPhrase(generalPhrase);
+
+  for (var i = 0; i<16; i++){
+    allVideosPart.addPhrase(new p5.Phrase(i, videoSteps, [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]));
+  }
+
+  console.log(allVideosPart);
+  allVideosPart.loop();
+
+}
+
+/*********************************************
+PHRASE CALLBACK FUNCTIONS
+*********************************************/
+function countSteps(time, playbackRate) {
+  console.log('step: ' + currentStep);
+  currentStep = currentStep + 4;
+  if (currentStep == 32){
+    currentStep = 0;
+  }
+}
+
+// <<< this thing happens when array value is 1
+function videoSteps(time, playbackRate) {
+  // console.log('this.name:');
+  // console.log(this.name);
+  stopVideo(this.name);
+  playVideo(this.name);
 }
 
 
@@ -104,15 +132,15 @@ function draw(){
 PARSER FOR THE DATA COMING FROM THE ARDUINO
 *********************************************/
 function parseData(data){
+
   // parsing the data by ','
   var newStatus = data.split(",");
-  // var closeLed = 20;
 
   // turning strings into integers
   for (var x=0; x<newStatus.length; x++){
     newStatus[x] = parseInt(newStatus[x]);
   }
-  console.log(newStatus);
+  // console.log(newStatus);
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
@@ -121,29 +149,31 @@ function parseData(data){
     }
     else {
       videos[i].status = newStatus[i];
-      videos[i].speed = (100+newStatus[16])/100;
-      videos[i].volume = (newStatus[17])/100;
-      // videos[i].loop = newStatus[17]; // currently we do not support loop configurations
-      videos[i].cut = (100-newStatus[18])/100;   // currently we do not support cutting configurations
-      // var videoNum = i+1;
-      // var videoId = 'video'+videoNum;
-      // var vid = document.getElementById(videoId);
+      videos[i].volume = (newStatus[16])/100;
+      // videos[i].cut = (100-newStatus[17])/100;
+      videos[i].steps = newStatus[17];
+      videos[i].speed = (100+newStatus[18])/100;
+      var phraseIndex = i;
+      var updatedPhrase = allVideosPart.getPhrase(phraseIndex);
+      console.log(updatedPhrase);
       if (newStatus[i] === 1){
-        // vid.currentTime = 0;
-        // vid.playbackRate = videos[i].speed;
-        // vid.volume = videos[i].volume;
-        // var cut = 1*videoStatus[16]/100;
-        // vid.currentTime = cut;
-        // vid.loop = true;
-        // vid.play();
-        playVideo(i);
+        var stepsArray = [];
+        var stepNum = currentStep;
+        for (var m=0; m<videos[i].steps; m++){
+          updatedPhrase.sequence[stepNum] = 1;
+          console.log('adding step on: ' + stepNum);
+          stepNum = stepNum + 8;
+          if (stepNum > 31) {
+            stepNum = stepNum - 32;
+          }
+
+        }
+
       }
       if (newStatus[i] === 0){
-        // vid.currentTime = 0;
-        // vid.loop = false;
-        // vid.pause();
-        stopVideo(i);
-        closeLed = i;
+        for (var n=0; n<32; n++){
+          updatedPhrase.sequence[n] = 0;
+        }
       }
     }
   }
@@ -155,33 +185,40 @@ function parseData(data){
 PLAYBACK FUNCTIONS: playVideo() + stopVideo()
 *********************************************/
 function playVideo(vidNum){
-  var videoElemNum = vidNum+1;
+
+  // getting video element as 'vid'
+  var videoElemNum = vidNum + 1;
   var videoId = 'video'+videoElemNum;
   var vid = document.getElementById(videoId);
-  // var vidObj = videos[vidNum];
-  vid.currentTime = vid.duration * videos[vidNum].cut;
+
+  // setting up video playback configurations
   vid.playbackRate = videos[vidNum].speed;
   vid.volume = videos[vidNum].volume;
-  if (videos[vidNum].loop === 5){
-    // vid.loop = true;
-    vid.play();
-    vid.onended=function(){
-      // videos[vidNum].loop = videos[vidNum].loop - 1;
-      // playVideo(vidNum); ////// REMOVED FROM ORIGINAL VERSION
-    };
+  // vid.currentTime = vid.duration * videos[vidNum].cut;
 
-  }
-  else if (videos[vidNum].loop === 0) {
-    stopVideo(vidNum);
-    serial.write(vidNum);
-  }
-  else {
-    vid.play();
-    vid.onended=function(){
-      // videos[vidNum].loop = videos[vidNum].loop - 1;
-      playVideo(vidNum);
-    };
-  }
+  // playing the video
+  vid.play();
+
+  // if (videos[vidNum].loop === 5){
+  //   // vid.loop = true;
+  //   vid.play();
+  //   vid.onended=function(){
+  //     // videos[vidNum].loop = videos[vidNum].loop - 1;
+  //     // playVideo(vidNum); ////// REMOVED FROM ORIGINAL VERSION
+  //   };
+  //
+  // }
+  // else if (videos[vidNum].loop === 0) {
+  //   stopVideo(vidNum);
+  //   serial.write(vidNum);
+  // }
+  // else {
+  //   vid.play();
+  //   vid.onended=function(){
+  //     // videos[vidNum].loop = videos[vidNum].loop - 1;
+  //     playVideo(vidNum);
+  //   };
+  // }
 
   // this.loop = loop;
   // this.speed = speed;
@@ -214,22 +251,3 @@ function addVideos(){
 }
 
 $(document).ready(addVideos);
-
-
-function makeSound(time, playbackRate) {
-  console.log('step: ' + currentStep);
-  currentStep++;
-  if (currentStep == 8){
-    currentStep = 0;
-  }
-  // mySound.rate(playbackRate);
-  // mySound.play(time);
-  // playVideo(0);
-  // playVideo(1);
-}
-
-
-function mouseClicked() {
-		myPart.loop();
-    // myPart.start();
-  }

@@ -93,19 +93,29 @@ void loop() {
         Serial.print(LEDstatus[i]);
         Serial.print(",");
       }
-      int pot1Value = analogRead(A0);
-      int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
-      Serial.print(pot1ValueMapped);
-      Serial.print(",");
 
+      // volume knob
       int pot2Value = analogRead(A1);
       int pot2ValueMapped = map(pot2Value, 0, 1020, 1, 100);
       Serial.print(pot2ValueMapped);
       Serial.print(",");
 
+      // cut knob -- currently steps
       int pot3Value = analogRead(A3);
-      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 100);
+      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
       Serial.print(pot3ValueMapped);
+      Serial.print(",");
+
+      // speed knob
+      int pot1Value = analogRead(A0);
+      int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
+      Serial.print(pot1ValueMapped);
+//      Serial.print(",");
+
+      // steps knob
+//      int pot3Value = analogRead(A4);
+//      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 100);
+//      Serial.print(pot3ValueMapped);
 
       Serial.println("");
 
