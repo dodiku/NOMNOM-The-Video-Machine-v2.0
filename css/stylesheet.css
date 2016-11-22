@@ -87,15 +87,15 @@ button:focus {
   /*margin-top: 16px;*/
   /*margin-bottom: 8px;*/
   width: 20%;
-  height: 80%;
-  background-color: #fafafa;
+  /*height: 80%;*/
+  /*background-color: #fafafa;*/
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden;
   border-color: #eee;
   /*border-color: red;*/
-  border-width: 4px;
-  border-style: solid;
+  /*border-width: 4px;*/
+  /*border-style: solid;*/
   /*border-radius: 6px;*/
   display: inline-block;
   text-align: center;

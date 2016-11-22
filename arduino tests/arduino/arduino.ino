@@ -93,29 +93,19 @@ void loop() {
         Serial.print(LEDstatus[i]);
         Serial.print(",");
       }
+      int pot1Value = analogRead(A0);
+      int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
+      Serial.print(pot1ValueMapped);
+      Serial.print(",");
 
-      // volume knob
       int pot2Value = analogRead(A1);
       int pot2ValueMapped = map(pot2Value, 0, 1020, 1, 100);
       Serial.print(pot2ValueMapped);
       Serial.print(",");
 
-      // cut knob -- currently steps
       int pot3Value = analogRead(A3);
-      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
+      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 100);
       Serial.print(pot3ValueMapped);
-      Serial.print(",");
-
-      // speed knob
-      int pot1Value = analogRead(A0);
-      int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
-      Serial.print(pot1ValueMapped);
-//      Serial.print(",");
-
-      // steps knob
-//      int pot3Value = analogRead(A4);
-//      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 100);
-//      Serial.print(pot3ValueMapped);
 
       Serial.println("");
 
@@ -123,7 +113,7 @@ void loop() {
       if (trellis.readSwitches()) {
         for (int n = 0; n < 16; n++) {
 
-          if (trellis.justPressed(n)) {
+          if (trellis.justReleased(n)) {
             if (trellis.isLED(n)) {
               trellis.clrLED(n);
               LEDstatus[n] = 0;
@@ -139,4 +129,3 @@ void loop() {
   }
 
 }
-

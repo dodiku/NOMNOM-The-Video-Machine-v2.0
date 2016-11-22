@@ -21,6 +21,7 @@ function tv(status, steps, speed, cut, vol) {
   this.speed = speed;     // playback speed (e.g. 1 == regular speed; 100 == x2 of regular speed)
   this.cut = cut;         // video trimming (e.g. 100% == no trimming)
   this.steps = steps;     // number of steps per bar (e.g. number between 1-4)
+  this.originStep = 0;    // the number of step on which the user started to play the video
 }
 
 /*********************************************
@@ -140,15 +141,18 @@ function parseData(data){
   for (var x=0; x<newStatus.length; x++){
     newStatus[x] = parseInt(newStatus[x]);
   }
-  // console.log(newStatus);
+  console.log(newStatus);
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
-    if (newStatus[i] ===  videos[i].status){
+    if ((newStatus[i] != 3) && (newStatus[i] === videos[i].status)){
       continue;
     }
     else {
-      videos[i].status = newStatus[i];
+      if (newStatus[i] != 3) {
+        videos[i].status = newStatus[i];
+        videos[i].originStep = currentStep;
+      }
       videos[i].volume = (newStatus[16])/100;
       // videos[i].cut = (100-newStatus[17])/100;
       videos[i].steps = newStatus[17];
@@ -157,7 +161,7 @@ function parseData(data){
       var updatedPhrase = allVideosPart.getPhrase(phraseIndex);
       console.log(updatedPhrase);
       if (newStatus[i] === 1){
-        var stepsArray = [];
+        // var stepsArray = [];
         var stepNum = currentStep;
         for (var m=0; m<videos[i].steps; m++){
           updatedPhrase.sequence[stepNum] = 1;
@@ -166,10 +170,37 @@ function parseData(data){
           if (stepNum > 31) {
             stepNum = stepNum - 32;
           }
-
         }
-
       }
+
+      if (newStatus[i] === 3){
+        for (var n=0; n<32; n++){
+          updatedPhrase.sequence[n] = 0;
+        }
+        var stepNum1 = videos[i].originStep;
+        for (n=0; n<videos[i].steps; n++) {
+          updatedPhrase.sequence[stepNum1] = 1;
+          stepNum1 = stepNum1 + 8;
+          if (stepNum1 > 31) {
+            stepNum1 = stepNum1 - 32;
+          }
+        }
+      }
+
+      // if (newStatus[i] === 3){
+      //   // var stepsArray = [];
+      //   // var stepNum = currentStep;
+      //   for (var m=0; m<videos[i].steps; m++){
+      //     updatedPhrase.sequence[stepNum] = 1;
+      //     console.log('adding step on: ' + stepNum);
+      //     stepNum = stepNum + 8;
+      //     if (stepNum > 31) {
+      //       stepNum = stepNum - 32;
+      //     }
+      //
+      //   }
+      // }
+
       if (newStatus[i] === 0){
         for (var n=0; n<32; n++){
           updatedPhrase.sequence[n] = 0;
@@ -246,7 +277,7 @@ function addVideos(){
   for (var i=1;i<17;i++){
     url = 'videos/' + i + '.mp4';
     $(screenArray[i-1]).empty();
-    $(screenArray[i-1]).append('<video id="video'+ i + '" width="100%"><source src="' + url + '" type="video/mp4"></video>');
+    $(screenArray[i-1]).append('<video id="video'+ i + '"width="100%" heigh="100%"><source src="' + url + '" type="video/mp4"></video>');
   }
 }
 
