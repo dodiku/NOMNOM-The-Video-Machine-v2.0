@@ -29,7 +29,7 @@ int LEDstatus[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int blinkStatus = 1;
 int blinkTime = 0;
 int buttonPress[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int oldStatus[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int buttonOldStatus[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 void setup() {
   Serial.begin(9600);
@@ -122,48 +122,36 @@ void loop() {
     blinkTime = 0;
   }
 
-  trellis.readSwitches();
-  for (uint8_t n = 0; n < numKeys; n++) {
-    if (trellis.justPressed(n)) {
-      LEDstatus[n] = 3;
-
-      continue;
-    }
-
-      if (LEDstatus[n] == 3) {
-        buttonPress[n]++;
-        if (blinkTime >= 4) {
-          if (trellis.isLED(n)) {
+  // checking if one of the buttons is currently pressed
+  if ((trellis.readSwitches() == true) || (trellis.readSwitches()) == false) {
+    for (uint8_t n = 0; n < numKeys; n++) {
+      if (trellis.justPressed(n)) {
+        if (trellis.isKeyPressed(n)) {
+          buttonPress[n] = buttonPress[n] + 1;
+          if (buttonPress[n] > 8) {
+            LEDstatus[n] = 3;
+            /* add blinking code here */
+          }
+        } else {
+          if (LEDstatus[n] == 1) {
+            LEDstatus[n] = 0;
+            buttonPress[n] = 0;
             trellis.clrLED(n);
             trellis.writeDisplay();
-            } else {
-              trellis.setLED(n);
-              trellis.writeDisplay();
-            }
+          } else {
+            LEDstatus[n] = 1;
+            buttonPress[n] = 0;
+            trellis.setLED(n);
+            trellis.writeDisplay();
+          }
         }
       }
-
-    if (trellis.justReleased(n)) {
-      if (buttonPress[n] > 8) {
+      else if (LEDstatus[n] == 3) {
         LEDstatus[n] = 1;
-        oldStatus[n] = 1;
         buttonPress[n] = 0;
         trellis.setLED(n);
         trellis.writeDisplay();
-      } else {
-        buttonPress[n] = 0;
-        if (oldStatus[n] == 1) {
-          LEDstatus[n] = 0;
-          oldStatus[n] = 0;
-          trellis.clrLED(n);
-          trellis.writeDisplay();
-        } else {
-          LEDstatus[n] = 1;
-          oldStatus[n] = 1;
-          trellis.setLED(n);
-          trellis.writeDisplay();
-        }
       }
     }
-  }
+  } // end of new
 }

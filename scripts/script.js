@@ -69,7 +69,7 @@ function setup() {
     allVideosPart.addPhrase(new p5.Phrase(i, videoSteps, [0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0]));
   }
 
-  console.log(allVideosPart);
+  // console.log(allVideosPart);
   allVideosPart.loop();
 
 }
@@ -141,7 +141,7 @@ function parseData(data){
   for (var x=0; x<newStatus.length; x++){
     newStatus[x] = parseInt(newStatus[x]);
   }
-  console.log(newStatus);
+  // console.log(newStatus);
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
