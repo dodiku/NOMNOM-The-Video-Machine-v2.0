@@ -277,7 +277,7 @@ function addVideos(){
   for (var i=1;i<17;i++){
     url = 'videos/' + i + '.mp4';
     $(screenArray[i-1]).empty();
-    $(screenArray[i-1]).append('<video id="video'+ i + '"width="100%" heigh="100%"><source src="' + url + '" type="video/mp4"></video>');
+    $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%"><source src="' + url + '" type="video/mp4"></video>');
   }
 }
 
