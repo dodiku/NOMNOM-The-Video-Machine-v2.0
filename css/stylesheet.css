@@ -112,6 +112,83 @@ button:focus {
   /*height: 600px;*/
 }
 
+.knobs {
+  text-align: center;
+  margin-top: 2%;
+  /*background-color: pink;*/
+}
+
+.attributes{
+  /*background-color: gray;*/
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1%;
+  margin-top: 1%;
+  width: 70%;
+  text-align: center;
+}
+
+.steps_line{
+  /*background-color: pink;*/
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1%;
+  margin-top: 1%;
+  width: 70%;
+  text-align: center;
+}
+
+.step {
+  /*background-color: #F7941D;*/
+  /*background-color: #FFA33E;*/
+  background-color: #ffe5c9;
+  width: 24.25%;
+  height: 20px;
+  display: inline-block;
+}
+
+.volume {
+  background-color: #A5DCE0;
+  width: 32.6%;
+  height: 20px;
+  display: inline-block;
+}
+
+.volume_icon {
+  /*background-color: #A5DCE0;*/
+  width: 32.6%;
+  /*height: 20px;*/
+  display: inline-block;
+}
+
+.cut_icon {
+  /*background-color: #A5DCE0;*/
+  width: 32.6%;
+  /*height: 20px;*/
+  display: inline-block;
+}
+
+.speed_icon {
+  /*background-color: #A5DCE0;*/
+  width: 32.6%;
+  /*height: 20px;*/
+  display: inline-block;
+}
+
+.speed {
+  background-color: #9B85BE;
+  width: 32.6%;
+  height: 20px;
+  display: inline-block;
+}
+
+.cut {
+  background-color: #80CAA5;
+  width: 32.6%;
+  height: 20px;
+  display: inline-block;
+}
+
 #video1, #video2, #video3, #video4, #video5, #video6, #video7, #video8, #video9 {
   /*object-fit: cover;
   position: fixed;
