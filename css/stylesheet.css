@@ -147,13 +147,6 @@ button:focus {
   display: inline-block;
 }
 
-.volume {
-  background-color: #A5DCE0;
-  width: 32.6%;
-  height: 20px;
-  display: inline-block;
-}
-
 .volume_icon {
   /*background-color: #A5DCE0;*/
   width: 32.6%;
@@ -175,18 +168,34 @@ button:focus {
   display: inline-block;
 }
 
-.speed {
-  background-color: #9B85BE;
+.attribute_div {
   width: 32.6%;
   height: 20px;
   display: inline-block;
 }
 
+.volume {
+  background-color: #A5DCE0;
+  /*width: 32.6%;*/
+  height: 20px;
+  width: 10px;
+  /*display: inline-block;*/
+}
+
+.speed {
+  background-color: #9B85BE;
+  /*width: 32.6%;*/
+  height: 20px;
+  width: 10px;
+  /*display: inline-block;*/
+}
+
 .cut {
   background-color: #80CAA5;
-  width: 32.6%;
+  /*width: 32.6%;*/
   height: 20px;
-  display: inline-block;
+  width: 10px;
+  /*display: inline-block;*/
 }
 
 #video1, #video2, #video3, #video4, #video5, #video6, #video7, #video8, #video9 {
