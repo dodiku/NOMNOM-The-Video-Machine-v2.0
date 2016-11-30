@@ -36,7 +36,7 @@ var allVideosPart;  // part object for all video phrases
 for (var i=0; i<16; i++){
   videos.push(new tv(0,5,1, 100, 1));
 }
-console.log(videos);
+// console.log(videos);
 
 
 var currentStep = 0; // holds that index value of current step of the squence array
@@ -84,7 +84,7 @@ function countSteps(time, playbackRate) {
 
   currectDiv = currentStep + 8;
   currectDiv = '#step' + currectDiv;
-  console.log(currectDiv);
+  // console.log(currectDiv);
   $('.step').css('background-color', '#ffe5c9');
   $(currectDiv).css('background-color', '#FFA33E');
 
@@ -164,6 +164,13 @@ function parseData(data){
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
+    videos[i].volume = (newStatus[16])/100;
+    // videos[i].cut = (100-newStatus[17])/100;
+    videos[i].cut = 100;
+    videos[i].speed = (100+newStatus[18])/100;
+    videos[i].steps = newStatus[17];
+    // console.log(videos[i].volume + "|" + videos[i].speed + "|" + videos[i].steps);
+    changeUI(videos[i].volume, videos[i].speed, videos[i].cut);
 
 /*
 DONE ------
@@ -221,16 +228,11 @@ if newStatus === 0
           videos[i].originStep = currentStep;
         }
 
-        videos[i].volume = (newStatus[16])/100;
-        // videos[i].cut = (100-newStatus[17])/100;
-        videos[i].speed = (100+newStatus[18])/100;
-        videos[i].steps = newStatus[17];
-
         // cleaning the sequence
         for (var n=0; n<32; n++){
           updatedPhrase.sequence[n] = 0;
         }
-        
+
         // applying steps changes, if any
         var stepNum = videos[i].originStep;
         for (var m=0; m<videos[i].steps; m++){
@@ -246,11 +248,12 @@ if newStatus === 0
 
       else if (newStatus[i] === 1) {
         videos[i].status = 1;
+        changeColor(i, videos[i].status);
       }
 
       else if (newStatus[i] === 0) {
-
         videos[i].status = 0;
+        changeColor(i, videos[i].status);
 
         // cleaning the sequence
         for (var n=0; n<32; n++){
@@ -419,6 +422,45 @@ function stopVideo(vidNum){
   vid.pause();
 }
 
+function changeUI(vol, speed, cut) {
+  var volPixels = vol*100;
+  volPixels = volPixels + "%";
+  $('.volume').css('width', volPixels);
+
+  var cutPixels = cut + "%";
+  $('.cut').css('width', cutPixels);
+
+  var speedPixels = (speed - 1)*100;
+  speedPixels = speedPixels + "%";
+  $('.speed').css('width', speedPixels);
+
+  // console.log('changed');
+}
+
+function changeColor(vidNum, status) {
+  var screenArray = $('.video_screen');
+
+  // vidNum++;
+  // var vidElement = ".video" + vidNum;
+  // vidElement = $(vidElement);
+  if (status === 1) {
+    $(screenArray[vidNum]).css('filter', 'grayscale(0%)');
+  }
+  else {
+    $(screenArray[vidNum]).css('filter', 'grayscale(100%)');
+  }
+
+  // var url;
+  // for (var i=1;i<17;i++){
+  //   url = 'videos/' + i + '.mp4';
+  //   $(screenArray[i-1]).empty();
+  //   $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%" style="z-index: 1;"><source src="' + url + '" type="video/mp4"></video>');
+  // }
+  // $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%" style="z-index: 1;"><source src="' + url + '" type="video/mp4"></video>');
+  //
+  //  filter: grayscale(100%)
+}
+
 
 /*********************************************
 APPENDING VIDEO ELEMENTS TO THE PAGE
@@ -431,8 +473,6 @@ function addVideos(){
     $(screenArray[i-1]).empty();
     $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%"><source src="' + url + '" type="video/mp4"></video>');
   }
-
-
 }
 
 $(document).ready(addVideos);
