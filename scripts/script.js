@@ -85,8 +85,11 @@ function countSteps(time, playbackRate) {
   currectDiv = currentStep + 8;
   currectDiv = '#step' + currectDiv;
   // console.log(currectDiv);
-  $('.step').css('background-color', '#ffe5c9');
-  $(currectDiv).css('background-color', '#FFA33E');
+  // $('.step').css('background-color', '#ffe5c9');
+  $('.step').css('background-color', '#EDEDF4');
+
+  // $(currectDiv).css('background-color', '#FFA33E');
+  $(currectDiv).css('background-color', '#B10F2E');
 
   currentStep = currentStep + 8;
 
@@ -164,13 +167,13 @@ function parseData(data){
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
-    videos[i].volume = (newStatus[16])/100;
-    // videos[i].cut = (100-newStatus[17])/100;
-    videos[i].cut = 100;
-    videos[i].speed = (100+newStatus[18])/100;
-    videos[i].steps = newStatus[17];
-    // console.log(videos[i].volume + "|" + videos[i].speed + "|" + videos[i].steps);
-    changeUI(videos[i].volume, videos[i].speed, videos[i].cut);
+
+    var vol = (newStatus[16])/100;
+    var speed = (100+newStatus[18])/100;
+    // var cut = = (100-newStatus[17])/100;
+    var cut = 100;
+
+    changeUI(vol, speed, cut);
 
 /*
 DONE ------
@@ -224,9 +227,21 @@ if newStatus === 0
       var updatedPhrase = allVideosPart.getPhrase(phraseIndex);
 
       if (newStatus[i] === 3){
+
         if (videos[i].originStep === null) {
           videos[i].originStep = currentStep;
         }
+
+        changeColor(i, 1);
+
+        videos[i].volume = vol;
+        // videos[i].cut = (100-newStatus[17])/100;
+        videos[i].cut = cut;
+        videos[i].speed = speed;
+        videos[i].steps = newStatus[17];
+        // console.log(videos[i].volume + "|" + videos[i].speed + "|" + videos[i].steps);
+        clearSteps(i);
+        addSteps(i, videos[i].originStep, videos[i].steps);
 
         // cleaning the sequence
         for (var n=0; n<32; n++){
@@ -236,6 +251,7 @@ if newStatus === 0
         // applying steps changes, if any
         var stepNum = videos[i].originStep;
         for (var m=0; m<videos[i].steps; m++){
+          // colorStep(i, stepNum);
           updatedPhrase.sequence[stepNum] = 1;
           console.log('adding step on: ' + stepNum);
           stepNum = stepNum + 8;
@@ -253,6 +269,7 @@ if newStatus === 0
 
       else if (newStatus[i] === 0) {
         videos[i].status = 0;
+        clearSteps(i);
         changeColor(i, videos[i].status);
 
         // cleaning the sequence
@@ -443,12 +460,14 @@ function changeColor(vidNum, status) {
   // vidNum++;
   // var vidElement = ".video" + vidNum;
   // vidElement = $(vidElement);
-  if (status === 1) {
-    $(screenArray[vidNum]).css('filter', 'grayscale(0%)');
-  }
-  else {
+  if (status === 0) {
     $(screenArray[vidNum]).css('filter', 'grayscale(100%)');
   }
+  else {
+    $(screenArray[vidNum]).css('filter', 'grayscale(0%)');
+  }
+
+
 
   // var url;
   // for (var i=1;i<17;i++){
@@ -462,6 +481,73 @@ function changeColor(vidNum, status) {
 }
 
 
+function clearSteps(vidNum){
+  vidNum++;
+  var element = "#vidstep" + vidNum;
+  var steps = $(element);
+  for (var i=0; i<steps.length; i++){
+    $(steps[i]).css('background-color', '');
+  }
+}
+
+function addSteps(vidNum, original, numOfSteps){
+  clearSteps(vidNum);
+  vidNum++;
+  vidNum++;
+  var element = "#vidstep" + vidNum;
+  var steps = $(element).children();
+  var coloredStep;
+  console.log(original);
+  // 24
+  // 0
+  // 8
+  // 16
+
+
+  if (original === 24) {
+    coloredStep = 1;
+  }
+  else if (original === 0) {
+    coloredStep = 2;
+  }
+  else if (original === 8) {
+    coloredStep = 3;
+  }
+  else {
+    coloredStep = 4;
+  }
+
+  for (var m=0; m<numOfSteps; m++){
+    var stepElement = "#step_small" + coloredStep;
+    $(stepElement).css('background-color', '#B10F2E');
+    if (coloredStep > 4) {
+      coloredStep = 1;
+    }
+    else {
+      coloredStep++;
+    }
+  }
+}
+
+function colorStep(vidNum, stepNum) {
+  vidNum++;
+  var element = "#vidstep" + vidNum;
+  var steps = $(element).children();
+  if (stepNum === 32) {
+    $(steps[0]).css('background-color', '#B10F2E');
+  }
+  else if (stepNum === 8) {
+    $(stepNum[1]).css('background-color', '#B10F2E');
+  }
+  else if (stepNum === 16) {
+    $(stepNum[2]).css('background-color', '#B10F2E');
+  }
+  else {
+    $(stepNum[3]).css('background-color', '#B10F2E');
+  }
+}
+
+
 /*********************************************
 APPENDING VIDEO ELEMENTS TO THE PAGE
 *********************************************/
@@ -471,7 +557,9 @@ function addVideos(){
   for (var i=1;i<17;i++){
     url = 'videos/' + i + '.mp4';
     $(screenArray[i-1]).empty();
-    $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%"><source src="' + url + '" type="video/mp4"></video>');
+    $(screenArray[i-1]).append('<div class="steps_line_small" id="vidstep' + i + '"></div><div><video id="video'+ i + '"width="80%" heigh="80%"><source src="' + url + '" type="video/mp4"></video></div>');
+    var element = $(screenArray[i-1]).children();
+    $(element[0]).append('<div class="step_small" id="step_small1"></div><div class="step_small" id="step_small2"></div><div class="step_small" id="step_small3"></div><div class="step_small" id="step_small4"></div></div>');
   }
 }
 

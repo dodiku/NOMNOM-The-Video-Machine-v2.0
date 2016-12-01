@@ -139,13 +139,31 @@ button:focus {
   text-align: center;
 }
 
+.steps_line_small{
+  margin-left: auto;
+  margin-right: auto;
+  width: 96%;
+}
+
 .step {
   /*background-color: #F7941D;*/
   /*background-color: #FFA33E;*/
-  background-color: #ffe5c9;
+  /*background-color: #ffe5c9;*/
+  background-color: #EDEDF4;
   width: 24.25%;
-  height: 20px;
+  height: 3px;
   display: inline-block;
+  text-align: center;
+}
+
+.step_small{
+  /*background-color: red;*/
+  width: 20%;
+  height: 3px;
+  margin-left: 0.5%;
+  margin-right: 0.5%;
+  display: inline-block;
+  text-align: center;
 }
 
 .volume_icon {
@@ -176,7 +194,8 @@ button:focus {
 }
 
 .volume {
-  background-color: #A5DCE0;
+  /*background-color: #A5DCE0;*/
+  background-color: #B10F2E;
   /*width: 32.6%;*/
   height: 20px;
   width: 10px;
@@ -184,7 +203,8 @@ button:focus {
 }
 
 .speed {
-  background-color: #9B85BE;
+  /*background-color: #9B85BE;*/
+  background-color: #B10F2E;
   /*width: 32.6%;*/
   height: 20px;
   width: 10px;
@@ -192,7 +212,8 @@ button:focus {
 }
 
 .cut {
-  background-color: #80CAA5;
+  /*background-color: #80CAA5;*/
+  background-color: #B10F2E;
   /*width: 32.6%;*/
   height: 20px;
   width: 10px;
