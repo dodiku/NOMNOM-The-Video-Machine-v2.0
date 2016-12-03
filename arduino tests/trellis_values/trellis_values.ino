@@ -29,7 +29,7 @@ int LEDstatus[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int blinkStatus = 1;
 int blinkTime = 0;
 int buttonPress[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int buttonOldStatus[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int oldStatus[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 void setup() {
   Serial.begin(9600);
@@ -59,24 +59,121 @@ void setup() {
 }
 
 void loop() {
+  delay(80); // 30ms delay is required, dont remove me!
 
-  delay(30);
-  Serial.print("trellis.readSwitches(0):");
-  Serial.print(trellis.readSwitches());
-  Serial.print("\t"); 
 
-  Serial.print("trellis.isKeyPressed(0):");
-  Serial.print(trellis.isKeyPressed(0));
-  Serial.print("\t");
+  /*************************************
+  // SENDING DATA TO P5.JS
+  *************************************/
+  if (Serial.available() > 0) {
 
-  
-  Serial.print("trellis.justPressed(0):");
-  Serial.print(trellis.justPressed(0));
-  Serial.print("\t");  
+      // reading serial from p5.js
+      int incoming = Serial.read();
 
-  Serial.print("trellis.justReleased(0):");
-  Serial.println(trellis.justReleased(0));
-  
-  
+      // print current status
+      for (int i = 0; i < 16; i++) {
+        Serial.print(LEDstatus[i]);
+        Serial.print(",");
+      }
+
+      // volume knob
+      int pot2Value = analogRead(A1);
+      int pot2ValueMapped = map(pot2Value, 0, 1020, 1, 100);
+      Serial.print(pot2ValueMapped);
+      Serial.print(",");
+
+      // step knob
+      int pot3Value = analogRead(A3);
+      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
+      Serial.print(pot3ValueMapped);
+      Serial.print(",");
+
+      // speed knob
+      int pot1Value = analogRead(A0);
+      int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
+      Serial.print(pot1ValueMapped);
+      Serial.print(",");
+
+      // // cut knob
+      // int pot3Value = analogRead(A3);
+      // int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
+      // Serial.print(pot3ValueMapped);
+      // Serial.print(",");
+
+      // blink data
+      Serial.print(blinkTime);
+
+      //////// SENDING BLINK DATA FROM DEBUG PURPOSES
+      // Serial.print(",");
+      // Serial.print(blinkTime);
+      // Serial.print(",");
+      // Serial.print(blinkStatus);
+      // Serial.print(",");
+      // for (int i = 0; i < 16; i++) {
+      //   Serial.print(buttonPress[i]);
+      //   Serial.print(",");
+      // }
+
+      // steps knob
+      //      int pot3Value = analogRead(A4);
+      //      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 100);
+      //      Serial.print(pot3ValueMapped);
+
+      Serial.println("");
+  }
+
+  /*************************************************
+  // CHANGING BUTTON STATES BASED ON BUTTON PRESSES
+  **************************************************/
+
+  blinkTime = blinkTime + 1;
+  if (blinkTime == 5) {
+    blinkTime = 0;
+  }
+
+  trellis.readSwitches();
+  for (uint8_t n = 0; n < numKeys; n++) {
+    if (trellis.justPressed(n)) {
+      LEDstatus[n] = 3;
+
+      continue;
+    }
+
+      if (LEDstatus[n] == 3) {
+        buttonPress[n]++;
+        if (blinkTime >= 4) {
+          if (trellis.isLED(n)) {
+            trellis.clrLED(n);
+            trellis.writeDisplay();
+            } else {
+              trellis.setLED(n);
+              trellis.writeDisplay();
+            }
+        }
+      }
+
+    if (trellis.justReleased(n)) {
+      if (buttonPress[n] > 8) {
+        LEDstatus[n] = 1;
+        oldStatus[n] = 1;
+        buttonPress[n] = 0;
+        trellis.setLED(n);
+        trellis.writeDisplay();
+      } else {
+        buttonPress[n] = 0;
+        if (oldStatus[n] == 1) {
+          LEDstatus[n] = 0;
+          oldStatus[n] = 0;
+          trellis.clrLED(n);
+          trellis.writeDisplay();
+        } else {
+          LEDstatus[n] = 1;
+          oldStatus[n] = 1;
+          trellis.setLED(n);
+          trellis.writeDisplay();
+        }
+      }
+    }
+  }
 }
 

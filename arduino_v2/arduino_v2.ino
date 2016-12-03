@@ -82,7 +82,7 @@ void loop() {
       Serial.print(pot2ValueMapped);
       Serial.print(",");
 
-      // cut knob -- currently steps
+      // step knob
       int pot3Value = analogRead(A3);
       int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
       Serial.print(pot3ValueMapped);
@@ -92,7 +92,16 @@ void loop() {
       int pot1Value = analogRead(A0);
       int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
       Serial.print(pot1ValueMapped);
-      //      Serial.print(",");
+      Serial.print(",");
+
+      // // cut knob
+      // int pot3Value = analogRead(A3);
+      // int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
+      // Serial.print(pot3ValueMapped);
+      // Serial.print(",");
+
+      // blink data
+      Serial.print(blinkTime);
 
       //////// SENDING BLINK DATA FROM DEBUG PURPOSES
       // Serial.print(",");
@@ -167,4 +176,3 @@ void loop() {
     }
   }
 }
-
