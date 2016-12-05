@@ -24,7 +24,7 @@ On its first version, The Video Machine controller offers three functions:
 To play videos, just populate the `/videos` folder with 16 video files (preferably short, 2 second ones), and name them `1.mp4, 2.mp4, 3.mp4, ..., 16.mp4`.
 
 ### Contributers
-The physical controller was designed and build by Mint Woraya Boonyapanachoti & Dror Ayalon.  
-All code was written by Mint Woraya Boonyapanachoti & Dror Ayalon.
+The physical controller was designed and build by Mint Woraya Boonyapanachoti & Dodi Dror Ayalon.  
+All code was written by Mint Woraya Boonyapanachoti & Dodi Dror Ayalon.
 
 ![The Video Machine](https://github.com/dodiku/the_video_machine_v2/blob/master/images/DSCF4666_small.jpg)
