@@ -1,4 +1,4 @@
-# NamNam: The Video Machine (version 2.0)
+# NomNom: The Video Machine (version 2.0)
 #### An ITP (NYU) project by Mint Woraya Boonyapanachoti & Dodi Dror Ayalon
 
 
