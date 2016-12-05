@@ -164,15 +164,15 @@ function parseData(data){
   for (var x=0; x<newStatus.length; x++){
     newStatus[x] = parseInt(newStatus[x]);
   }
-  // console.log(newStatus);
+  console.log(newStatus);
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
 
-    var vol = (newStatus[16])/100;
+    var vol = (newStatus[17])/100;
     var speed = (100+newStatus[18])/100;
-    // var cut = = (100-newStatus[17])/100;
-    var cut = 100;
+    var cut = (newStatus[19])/200;
+    // var cut = 100;
 
     changeUI(vol, speed, cut);
 
@@ -243,7 +243,7 @@ if newStatus === 0
         // videos[i].cut = (100-newStatus[17])/100;
         videos[i].cut = cut;
         videos[i].speed = speed;
-        videos[i].steps = newStatus[17];
+        videos[i].steps = newStatus[16];
         // console.log(videos[i].volume + "|" + videos[i].speed + "|" + videos[i].steps);
         // clearSteps(i);
         changeKnobs(i);
@@ -253,9 +253,9 @@ if newStatus === 0
         // making the video border blink
         var vidID = i+1;
         vidID = "#video" + vidID;
-        if (newStatus[19] === 2) {
+        if (newStatus[20] === 2) {
           if (($(vidID).css('border-color')) === "rgba(177, 15, 46, 0)"){
-            $(vidID).css('border-color', "rgba(177, 15, 46, 0.6)");
+            $(vidID).css('border-color', "rgba(177, 15, 46, 0.2)");
           }
           else {
             $(vidID).css('border-color', "rgba(177, 15, 46, 0)");
@@ -425,7 +425,7 @@ function playVideo(vidNum){
   // setting up video playback configurations
   vid.playbackRate = videos[vidNum].speed;
   vid.volume = videos[vidNum].volume;
-  // vid.currentTime = vid.duration * videos[vidNum].cut;
+  vid.currentTime = vid.duration * videos[vidNum].cut;
 
   // playing the video
   vid.play();
@@ -589,7 +589,7 @@ function addVideos(){
     // $(screenArray[i-1]).append('<div class="steps_line_small" id="vidstep' + i + '"></div><div><video id="video'+ i + '"width="80%" heigh="80%"><source src="' + url + '" type="video/mp4"></video></div>');
     // var element = $(screenArray[i-1]).children();
     // $(element[0]).append('<div class="step_small" id="step_small1"></div><div class="step_small" id="step_small2"></div><div class="step_small" id="step_small3"></div><div class="step_small" id="step_small4"></div></div>');
-    $(screenArray[i-1]).append('</div><div class="knobs_video" id="knob_video'+ i +'"></div><video id="video'+ i + '"width="90%" heigh="90%"><source src="' + url + '" type="video/mp4"></video></div>');
+    $(screenArray[i-1]).append('</div><div class="knobs_video" id="knob_video'+ i +'"></div><video id="video'+ i + '"width="85%" heigh="85%"><source src="' + url + '" type="video/mp4"></video></div>');
     var knobsID = "knob_video" + i;
 
     // $(knobsID).append('<canvas nx="matrix" min="0" max="0"></canvas>'); // steps
@@ -639,7 +639,7 @@ function addVideos(){
     Object.values(nx.widgets)[m].init();
     m = m + 4;
   }
-  nx.colorize('rgba(177,15,46,0.8)');
+  nx.colorize('rgba(255,255,255,1)');
   nx.colorize('fill', 'rgba(255,255,255,0.2)');
 }
 
@@ -678,7 +678,7 @@ function changeKnobs(vidNum) {
   knobs[knobNum+1].draw();
   knobs[knobNum+2].val.value = videos[vidNum].speed-1;
   knobs[knobNum+2].draw();
-  knobs[knobNum+3].val.value = videos[vidNum].cut/100;
+  knobs[knobNum+3].val.value = (videos[vidNum].cut * 2); 
   knobs[knobNum+3].draw();
 
 

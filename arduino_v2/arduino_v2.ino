@@ -35,6 +35,10 @@ void setup() {
   Serial.begin(9600);
   // INT pin requires a pullup
   pinMode(INTPIN, INPUT);
+  pinMode(5, INPUT);
+  pinMode(6, INPUT);
+  pinMode(7, INPUT);
+  pinMode(8, INPUT);
   digitalWrite(INTPIN, HIGH);
 
   trellis.begin(0x70);  // only one
@@ -76,29 +80,37 @@ void loop() {
         Serial.print(",");
       }
 
+      // step knob
+      int pot1Value = 0;
+      if (digitalRead(5) == HIGH) {
+        pot1Value = 1;
+      } else if (digitalRead(6) == HIGH) {
+        pot1Value = 2;
+      } else if (digitalRead(7) == HIGH) {
+        pot1Value = 3;
+      } else if (digitalRead(8) == HIGH) {
+        pot1Value = 4;
+      }
+      Serial.print(pot1Value);
+      Serial.print(",");
+
       // volume knob
       int pot2Value = analogRead(A1);
-      int pot2ValueMapped = map(pot2Value, 0, 1020, 1, 100);
+      int pot2ValueMapped = map(pot2Value, 0, 1020, 0, 100);
       Serial.print(pot2ValueMapped);
       Serial.print(",");
 
-      // step knob
-      int pot3Value = analogRead(A3);
-      int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
+      // speed knob
+      int pot3Value = analogRead(A0);
+      int pot3ValueMapped = map(pot3Value, 0, 1020, 0, 100);
       Serial.print(pot3ValueMapped);
       Serial.print(",");
 
-      // speed knob
-      int pot1Value = analogRead(A0);
-      int pot1ValueMapped = map(pot1Value, 0, 1020, 1, 100);
-      Serial.print(pot1ValueMapped);
+      // cut knob
+      int pot4Value = analogRead(A3);
+      int pot4ValueMapped = map(pot4Value, 0, 1020, 0, 100);
+      Serial.print(pot4ValueMapped);
       Serial.print(",");
-
-      // // cut knob
-      // int pot3Value = analogRead(A3);
-      // int pot3ValueMapped = map(pot3Value, 0, 1020, 1, 4);
-      // Serial.print(pot3ValueMapped);
-      // Serial.print(",");
 
       // blink data
       Serial.print(blinkTime);
@@ -176,3 +188,4 @@ void loop() {
     }
   }
 }
+
