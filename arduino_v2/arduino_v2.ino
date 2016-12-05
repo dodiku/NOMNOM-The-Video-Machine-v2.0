@@ -83,13 +83,13 @@ void loop() {
       // step knob
       int pot1Value = 0;
       if (digitalRead(5) == HIGH) {
-        pot1Value = 1;
-      } else if (digitalRead(6) == HIGH) {
-        pot1Value = 2;
-      } else if (digitalRead(7) == HIGH) {
-        pot1Value = 3;
-      } else if (digitalRead(8) == HIGH) {
         pot1Value = 4;
+      } else if (digitalRead(6) == HIGH) {
+        pot1Value = 3;
+      } else if (digitalRead(7) == HIGH) {
+        pot1Value = 2;
+      } else if (digitalRead(8) == HIGH) {
+        pot1Value = 1;
       }
       Serial.print(pot1Value);
       Serial.print(",");
