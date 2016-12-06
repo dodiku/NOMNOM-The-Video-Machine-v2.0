@@ -255,16 +255,17 @@ canvas{
 
 video{
   /*border: 8px solid rgba(177,15,46,1);*/
-  border-radius: 6px;
+  border-radius: 4px;
   border-color: rgba(177,15,46,0);
   border-style: solid;
-  border-width: 8px;
+  border-width: 4px;
 }
 
 .gif {
   display: inline-block;
   /*text-align: center;*/
   width:48%;
+  color: rgba(255,255,255,0.9);
 }
 
 #video1, #video2, #video3, #video4, #video5, #video6, #video7, #video8, #video9 {

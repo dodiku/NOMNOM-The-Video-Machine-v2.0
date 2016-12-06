@@ -164,7 +164,7 @@ function parseData(data){
   for (var x=0; x<newStatus.length; x++){
     newStatus[x] = parseInt(newStatus[x]);
   }
-  console.log(newStatus);
+  // console.log(newStatus);
 
   // going over all videos to check out if there was a change in video.status
   for (var i=0; i<16; i++){
@@ -255,7 +255,7 @@ if newStatus === 0
         vidID = "#video" + vidID;
         if (newStatus[20] === 2) {
           if (($(vidID).css('border-color')) === "rgba(177, 15, 46, 0)"){
-            $(vidID).css('border-color', "rgba(177, 15, 46, 0.2)");
+            $(vidID).css('border-color', "rgba(255,255,255,0.9)");
           }
           else {
             $(vidID).css('border-color', "rgba(177, 15, 46, 0)");
@@ -595,6 +595,13 @@ function addVideos(){
     // $(knobsID).append('<canvas nx="matrix" min="0" max="0"></canvas>'); // steps
     // $(knobsID).prepend('<div id="steps_number">' + videos[i-1].steps + '</div>'); // steps
 
+    var settings0 = {
+      'parent': knobsID,
+      'w': '200px',
+      'h': '2px',
+    };
+
+
     var settings1 = {
       'parent': knobsID,
       'w': '200px',
@@ -610,6 +617,7 @@ function addVideos(){
     // console.log(settings1);
     // console.log(settings2);
 //
+    // nx.add('matrix', settings0);
     nx.add('matrix', settings1);
     nx.add('dial', settings2);
     nx.add('dial', settings2);
@@ -639,7 +647,7 @@ function addVideos(){
     Object.values(nx.widgets)[m].init();
     m = m + 4;
   }
-  nx.colorize('rgba(255,255,255,1)');
+  nx.colorize('rgba(255,255,255,0.9)');
   nx.colorize('fill', 'rgba(255,255,255,0.2)');
 }
 
@@ -670,6 +678,7 @@ function hideKnobs(vidNum) {
 }
 
 function changeKnobs(vidNum) {
+  // var knobNum = vidNum * 5 + 1;
   var knobNum = vidNum * 4;
   var originStep;
   // var stepArray = [];
@@ -678,7 +687,7 @@ function changeKnobs(vidNum) {
   knobs[knobNum+1].draw();
   knobs[knobNum+2].val.value = videos[vidNum].speed-1;
   knobs[knobNum+2].draw();
-  knobs[knobNum+3].val.value = (videos[vidNum].cut * 2); 
+  knobs[knobNum+3].val.value = (videos[vidNum].cut * 2);
   knobs[knobNum+3].draw();
 
 
