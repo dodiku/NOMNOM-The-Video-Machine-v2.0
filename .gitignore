@@ -3,3 +3,5 @@
 videos/*.mp4
 videos/vids
 _videos
+*._DS_Store
+_DS_Store
