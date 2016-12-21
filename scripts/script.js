@@ -247,10 +247,10 @@ function parseData(data){
         videos[i].originStep = null;
 
       }
-    } // end of new else
-  } // end of for loop
+    }
+  }
   serial.write(1);
-} // end of function
+}
 
 
 /*********************************************
