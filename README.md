@@ -39,4 +39,4 @@ To play videos, just populate the `/videos` folder with 16 video files (preferab
 The physical controller was designed and build by Mint Woraya Boonyapanachoti & Dodi Dror Ayalon.  
 All code was written by Mint Woraya Boonyapanachoti & Dodi Dror Ayalon.
 
-![NOMNOM 2: The Video Machine at the NYU ITP Winter Show 2016](https://github.com/dodiku/the_video_machine_v2/blob/master/images/DSCF4845_small)
+![NOMNOM 2: The Video Machine at the NYU ITP Winter Show 2016](https://github.com/dodiku/the_video_machine_v2/blob/master/images/DSCF4845_small.jpg)
