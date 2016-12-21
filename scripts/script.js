@@ -1,6 +1,5 @@
 /***********************************************************************
-THIS IS THE CODE FOR THE VIDEO MACHINE VERSION 2.
-MID-TERM ITP PROJECT BY MINT WORAYA BOONYAPANACHOTI & DROR AYALON.
+NOMNOM 2: VIDEO MACHINE VERSION
 FOR MORE DETAILS GO TO: https://github.com/dodiku/the_video_machine_v2
 ***********************************************************************/
 
@@ -22,7 +21,6 @@ function tv(status, steps, speed, cut, vol) {
   this.cut = cut;         // video trimming (e.g. 100% == no trimming)
   this.steps = steps;     // number of steps per bar (e.g. number between 1-4)
   this.originStep = 0;    // the number of step on which the user started to play the video
-  // this.stableStatus = false;  // the status of the video before the last click
 }
 
 /*********************************************
@@ -38,7 +36,6 @@ for (var i=0; i<16; i++){
   videos.push(new tv(0,5,1, 100, 1));
 }
 // console.log(videos);
-
 
 var currentStep = 0; // holds that index value of current step of the squence array
 
@@ -85,33 +82,17 @@ function countSteps(time, playbackRate) {
 
   currectDiv = currentStep + 8;
   currectDiv = '#step' + currectDiv;
-  // console.log(currectDiv);
-  // $('.step').css('background-color', '#ffe5c9');
   $('.step').css('background-color', '#EDEDF4');
-
-  // $(currectDiv).css('background-color', '#FFA33E');
   $(currectDiv).css('background-color', 'rgba(177,15,46,0.8)');
-
   currentStep = currentStep + 8;
 
   if (currentStep == 32){
     currentStep = 0;
   }
-  // if (currentStep % 8 === 0) {
-    // var currectDiv = currentStep/8;
-    // currectDiv = '#step' + currentStep;
-    // console.log(currectDiv);
-    // $('.step').css('background-color', '#ffe5c9');
-    // $(currectDiv).css('background-color', '#FFA33E');
-  // }
-
 
 }
 
-// <<< this thing happens when array value is 1
 function videoSteps(time, playbackRate) {
-  // console.log('this.name:');
-  // console.log(this.name);
   stopVideo(this.name);
   playVideo(this.name);
 }
@@ -153,7 +134,8 @@ function draw(){
 
 
 /*********************************************
-PARSER FOR THE DATA COMING FROM THE ARDUINO
+PARSER: PARSE DATA THAT ARRIVES FROM
+ARDUINO, AND APPLY CHANGES IF NEEDED
 *********************************************/
 function parseData(data){
 
@@ -171,52 +153,17 @@ function parseData(data){
 
     var vol = (newStatus[17])/100;
     var speed = (100+newStatus[18])/100;
-    var cut = (newStatus[19])/200;
-    // var cut = 100;
+    var cut;
+
+    if (newStatus[19] <= 5) {
+      cut = 0;
+    }
+    else {
+      cut = (newStatus[19])/200;
+    }
 
     changeUI(vol, speed, cut);
 
-/*
-DONE ------
-if ((newStatus[i] != 3) && (newStatus[i] === videos[i].status)){
-  continue;
-}
-
-
-
-
-
-if status === false -- > play
-[v]apply first step you get as originStep
-apply all new varialbles
-
-if status === true && newStatus === 3 --- > apply changes
-keep original step
-apply all new varialbles
-
-if status === true && newStatus === 0 --- > stop
-original step = null
-stableStatus = false
-
-
-
-
-
-if newStatus === 3
-  if null originStep
-    add original step
-  apply all variables
-  // status = 1
-
-if newStatus === 1
-  status = 1
-
-if newStatus === 0
-  status = 0
-  clean sequence
-  originStep = null
-
-*/
     // NO CHANGE IN THE STATUS OF THE VIDEO ---> CONTINUE
     if ((newStatus[i] !== 3) && (newStatus[i] === videos[i].status)){
       var vidID = i+1;
@@ -240,15 +187,10 @@ if newStatus === 0
         showKnobs(i);
 
         videos[i].volume = vol;
-        // videos[i].cut = (100-newStatus[17])/100;
         videos[i].cut = cut;
         videos[i].speed = speed;
         videos[i].steps = newStatus[16];
-        // console.log(videos[i].volume + "|" + videos[i].speed + "|" + videos[i].steps);
-        // clearSteps(i);
         changeKnobs(i);
-        // addSteps(i, videos[i].originStep, videos[i].steps);
-
 
         // making the video border blink
         var vidID = i+1;
@@ -261,10 +203,9 @@ if newStatus === 0
             $(vidID).css('border-color', "rgba(177, 15, 46, 0)");
           }
         }
-        // borderColor = "rgba(177,15,46," + newStatus[19]/5 + ")";
 
 
-        // cleaning the sequence
+        // clearing the sequence
         for (var n=0; n<32; n++){
           updatedPhrase.sequence[n] = 0;
         }
@@ -272,7 +213,6 @@ if newStatus === 0
         // applying steps changes, if any
         var stepNum = videos[i].originStep;
         for (var m=0; m<videos[i].steps; m++){
-          // colorStep(i, stepNum);
           updatedPhrase.sequence[stepNum] = 1;
           console.log('adding step on: ' + stepNum);
           stepNum = stepNum + 8;
@@ -293,14 +233,13 @@ if newStatus === 0
 
       else if (newStatus[i] === 0) {
         videos[i].status = 0;
-        // clearSteps(i);
         hideKnobs(i);
         changeColor(i, videos[i].status);
         var vidID = i+1;
         vidID = "#video" + vidID;
         $(vidID).css('border-color', "rgba(177,15,46,0)");
 
-        // cleaning the sequence
+        // clearing the sequence
         for (var n=0; n<32; n++){
           updatedPhrase.sequence[n] = 0;
         }
@@ -312,104 +251,6 @@ if newStatus === 0
   } // end of for loop
   serial.write(1);
 } // end of function
-
-
-//
-//         // cleaning the sequence
-//         for (var n=0; n<32; n++){
-//           updatedPhrase.sequence[n] = 0;
-//         }
-//
-//         var stepNum1 = videos[i].originStep;
-//         for (n=0; n<videos[i].steps; n++) {
-//           updatedPhrase.sequence[stepNum1] = 1;
-//           stepNum1 = stepNum1 + 8;
-//           if (stepNum1 > 31) {
-//             stepNum1 = stepNum1 - 32;
-//           }
-//         }
-//       }
-//
-//
-//       //
-//       // // VIDEO IS NOT BEING PLAYED CURRENTLY ---> SAVE CURRENTSTEP + APPLY NEW VARIABLES + CHANGE STATUS TO 1
-//       // if (videos[i].status === 0){
-//       //   videos[i].originStep = currentStep;
-//       //   // apply new variables...
-//       // }
-//       //
-//       // // VIDEO IS BEING PLAYED ---> KEEP ORIGINAL STEP + APPLY NEW VARIABLES
-//       // else if ((videos[i].status === 1) && (newStatus[i] !== 0)) {
-//       //
-//       //   // applying new VARIABLES
-//       //   videos[i].volume = (newStatus[16])/100;
-//       //   videos[i].speed = (100+newStatus[18])/100;
-//       //   // videos[i].cut = (100-newStatus[17])/100;
-//       //
-//       //   videos[i].steps = newStatus[17];
-//       //   // finding the position of current step
-//       //
-//       // }
-//       //
-//       // // VIDEO IS BEING PLAYED, USER ASKS TO TURN OFF ---> CHANGE STATUS TO 0
-//       // else if (true) {
-//       //
-//       // }
-//       //
-//
-//
-//       if ((newStatus[i] !== 3) && (videos[i].status === 0)) {
-//         videos[i].originStep = currentStep;
-//       }
-//         videos[i].status = newStatus[i];
-//       }
-//       videos[i].volume = (newStatus[16])/100;
-//       // videos[i].cut = (100-newStatus[17])/100;
-//       videos[i].steps = newStatus[17];
-//       videos[i].speed = (100+newStatus[18])/100;
-//
-//       console.log(updatedPhrase);
-//       var phraseIndex = i;
-//       var updatedPhrase = allVideosPart.getPhrase(phraseIndex);
-//       if (newStatus[i] === 1){
-//         // var stepsArray = [];
-//         var stepNum = currentStep;
-//         for (var m=0; m<videos[i].steps; m++){
-//           updatedPhrase.sequence[stepNum] = 1;
-//           console.log('adding step on: ' + stepNum);
-//           stepNum = stepNum + 8;
-//           if (stepNum > 31) {
-//             stepNum = stepNum - 32;
-//           }
-//         }
-//       }
-//
-//
-//
-//       // if (newStatus[i] === 3){
-//       //   // var stepsArray = [];
-//       //   // var stepNum = currentStep;
-//       //   for (var m=0; m<videos[i].steps; m++){
-//       //     updatedPhrase.sequence[stepNum] = 1;
-//       //     console.log('adding step on: ' + stepNum);
-//       //     stepNum = stepNum + 8;
-//       //     if (stepNum > 31) {
-//       //       stepNum = stepNum - 32;
-//       //     }
-//       //
-//       //   }
-//       // }
-//
-//       if (newStatus[i] === 0){
-//         for (var n=0; n<32; n++){
-//           updatedPhrase.sequence[n] = 0;
-//         }
-//         videos[i].originStep = null;
-//       }
-//     }
-//   }
-//   serial.write(1);
-// }
 
 
 /*********************************************
@@ -429,44 +270,19 @@ function playVideo(vidNum){
 
   // playing the video
   vid.play();
-
-  // if (videos[vidNum].loop === 5){
-  //   // vid.loop = true;
-  //   vid.play();
-  //   vid.onended=function(){
-  //     // videos[vidNum].loop = videos[vidNum].loop - 1;
-  //     // playVideo(vidNum); ////// REMOVED FROM ORIGINAL VERSION
-  //   };
-  //
-  // }
-  // else if (videos[vidNum].loop === 0) {
-  //   stopVideo(vidNum);
-  //   serial.write(vidNum);
-  // }
-  // else {
-  //   vid.play();
-  //   vid.onended=function(){
-  //     // videos[vidNum].loop = videos[vidNum].loop - 1;
-  //     playVideo(vidNum);
-  //   };
-  // }
-
-  // this.loop = loop;
-  // this.speed = speed;
-  // this.cut = cut;
-  // this.volume = vol;
-
 }
 
 function stopVideo(vidNum){
-  var videoElemNum = vidNum+1;
+  var videoElemNum = vidNum + 1;
   var videoId = 'video'+videoElemNum;
   var vid = document.getElementById(videoId);
-  vid.currentTime = 0;
-  // vid.loop = false;
+  // vid.currentTime = 0;
   vid.pause();
 }
 
+/*********************************************
+KNOBS GRAPHICAL UI FUNCTIONS
+*********************************************/
 function changeUI(vol, speed, cut) {
   var volPixels = vol*100;
   volPixels = volPixels + "%";
@@ -478,16 +294,11 @@ function changeUI(vol, speed, cut) {
   var speedPixels = (speed - 1)*100;
   speedPixels = speedPixels + "%";
   $('.speed').css('width', speedPixels);
-
-  // console.log('changed');
 }
 
 function changeColor(vidNum, status) {
   var screenArray = $('.video_screen');
 
-  // vidNum++;
-  // var vidElement = ".video" + vidNum;
-  // vidElement = $(vidElement);
   if (status === 0) {
     $(screenArray[vidNum]).css('filter', 'grayscale(100%)');
   }
@@ -495,65 +306,61 @@ function changeColor(vidNum, status) {
     $(screenArray[vidNum]).css('filter', 'grayscale(0%)');
   }
 
-
-
-  // var url;
-  // for (var i=1;i<17;i++){
-  //   url = 'videos/' + i + '.mp4';
-  //   $(screenArray[i-1]).empty();
-  //   $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%" style="z-index: 1;"><source src="' + url + '" type="video/mp4"></video>');
-  // }
-  // $(screenArray[i-1]).append('<video id="video'+ i + '"width="80%" heigh="80%" style="z-index: 1;"><source src="' + url + '" type="video/mp4"></video>');
-  //
-  //  filter: grayscale(100%)
 }
 
-
-function clearSteps(vidNum){
+function showKnobs(vidNum) {
   vidNum++;
-  var element = "#vidstep" + vidNum;
-  var steps = $(element);
-  for (var i=0; i<steps.length; i++){
-    $(steps[i]).css('background-color', '');
-  }
+  var knobsID = '#knob_video' + vidNum;
+  $(knobsID).css('display', 'inline');
 }
 
-function addSteps(vidNum, original, numOfSteps){
-  clearSteps(vidNum);
+function hideKnobs(vidNum) {
   vidNum++;
-  vidNum++;
-  var element = "#vidstep" + vidNum;
-  var steps = $(element).children();
-  var coloredStep;
-  console.log(original);
-  // 24
-  // 0
-  // 8
-  // 16
-  // originStep
+  var knobsID = '#knob_video' + vidNum;
+  $(knobsID).css('display', 'none');
+
+  var vidKnobs = (vidNum-1)*4;
+  knobs[vidKnobs].setCell(0,0,false);
+  knobs[vidKnobs].setCell(1,0,false);
+  knobs[vidKnobs].setCell(2,0,false);
+  knobs[vidKnobs].setCell(3,0,false);
+
+}
+
+function changeKnobs(vidNum) {
+  var knobNum = vidNum * 4;
+  var originStep;
+  knobs[knobNum+1].val.value = videos[vidNum].volume;
+  knobs[knobNum+1].draw();
+  knobs[knobNum+2].val.value = videos[vidNum].speed-1;
+  knobs[knobNum+2].draw();
+  knobs[knobNum+3].val.value = (videos[vidNum].cut * 2);
+  knobs[knobNum+3].draw();
 
 
-  if (original === 24) {
-    coloredStep = 1;
+  if (videos[vidNum].originStep === 24) {
+    originStep = 0;
   }
-  else if (original === 0) {
-    coloredStep = 2;
+  else if (videos[vidNum].originStep === 0) {
+    originStep = 1;
   }
-  else if (original === 8) {
-    coloredStep = 3;
+  else if (videos[vidNum].originStep === 8) {
+    originStep = 2;
   }
   else {
-    coloredStep = 4;
+    originStep = 3;
   }
 
-  for (var m=0; m<numOfSteps; m++){
-    var stepElement = "#step_small" + coloredStep;
-    $(stepElement).css('background-color', '#B10F2E');
-    if (coloredStep > 4) {
-      coloredStep = 1;
-    }
-    else {
-      coloredStep++;
+  knobs[knobNum].setCell(0,0,false);
+  knobs[knobNum].setCell(1,0,false);
+  knobs[knobNum].setCell(2,0,false);
+  knobs[knobNum].setCell(3,0,false);
+
+  for (var y=0; y<videos[vidNum].steps; y++){
+    knobs[knobNum].setCell(originStep,0,true);
+    originStep++;
+    if (originStep > 3) {
+      originStep = 0;
     }
   }
 }
@@ -586,14 +393,8 @@ function addVideos(){
   for (var i=1;i<17;i++){
     url = 'videos/' + i + '.mp4';
     $(screenArray[i-1]).empty();
-    // $(screenArray[i-1]).append('<div class="steps_line_small" id="vidstep' + i + '"></div><div><video id="video'+ i + '"width="80%" heigh="80%"><source src="' + url + '" type="video/mp4"></video></div>');
-    // var element = $(screenArray[i-1]).children();
-    // $(element[0]).append('<div class="step_small" id="step_small1"></div><div class="step_small" id="step_small2"></div><div class="step_small" id="step_small3"></div><div class="step_small" id="step_small4"></div></div>');
     $(screenArray[i-1]).append('</div><div class="knobs_video" id="knob_video'+ i +'"></div><video id="video'+ i + '"width="85%" heigh="85%"><source src="' + url + '" type="video/mp4"></video></div>');
     var knobsID = "knob_video" + i;
-
-    // $(knobsID).append('<canvas nx="matrix" min="0" max="0"></canvas>'); // steps
-    // $(knobsID).prepend('<div id="steps_number">' + videos[i-1].steps + '</div>'); // steps
 
     var settings0 = {
       'parent': knobsID,
@@ -614,31 +415,11 @@ function addVideos(){
       'h': '30px',
     };
 
-    // console.log(settings1);
-    // console.log(settings2);
-//
-    // nx.add('matrix', settings0);
     nx.add('matrix', settings1);
     nx.add('dial', settings2);
     nx.add('dial', settings2);
     nx.add('dial', settings2);
-//
-// <canvas nx="dial" min="40" max="300" label="freq"></canvas>
-//
-//
-// <canvas nx="matrix" label="notes"></canvas>
 
-
-
-    /*
-    This settings object may have any of the following properties:
-    x (integer in px),
-    y,
-    w (width),
-    h (height),
-    name (widget’s OSC name and canvas ID),
-    parent (the ID of the element you wish to add the canvas into).
-    */
   }
   knobs = Object.values(nx.widgets);
   var m = 0;
@@ -649,81 +430,6 @@ function addVideos(){
   }
   nx.colorize('rgba(255,255,255,0.9)');
   nx.colorize('fill', 'rgba(255,255,255,0.2)');
-}
-
-function showKnobs(vidNum) {
-  vidNum++;
-  var knobsID = '#knob_video' + vidNum;
-  $(knobsID).css('display', 'inline');
-}
-
-function hideKnobs(vidNum) {
-  vidNum++;
-  var knobsID = '#knob_video' + vidNum;
-  $(knobsID).css('display', 'none');
-
-  var vidKnobs = (vidNum-1)*4;
-  knobs[vidKnobs].setCell(0,0,false);
-  knobs[vidKnobs].setCell(1,0,false);
-  knobs[vidKnobs].setCell(2,0,false);
-  knobs[vidKnobs].setCell(3,0,false);
-
-// dodiku
-  // for (var y=0; y<4; y++){
-  //   if (y===4){
-  //     continue;
-  //   }
-  //   knobs[vidKnobs].setCell(y,0,false);
-  // }
-}
-
-function changeKnobs(vidNum) {
-  // var knobNum = vidNum * 5 + 1;
-  var knobNum = vidNum * 4;
-  var originStep;
-  // var stepArray = [];
-  // knobs[knobNum] = // steps
-  knobs[knobNum+1].val.value = videos[vidNum].volume;
-  knobs[knobNum+1].draw();
-  knobs[knobNum+2].val.value = videos[vidNum].speed-1;
-  knobs[knobNum+2].draw();
-  knobs[knobNum+3].val.value = (videos[vidNum].cut * 2);
-  knobs[knobNum+3].draw();
-
-
-  if (videos[vidNum].originStep === 24) {
-    originStep = 0;
-  }
-  else if (videos[vidNum].originStep === 0) {
-    originStep = 1;
-  }
-  else if (videos[vidNum].originStep === 8) {
-    originStep = 2;
-  }
-  else {
-    originStep = 3;
-  }
-
-// dodiku
-
-  knobs[knobNum].setCell(0,0,false);
-  knobs[knobNum].setCell(1,0,false);
-  knobs[knobNum].setCell(2,0,false);
-  knobs[knobNum].setCell(3,0,false);
-
-  for (var y=0; y<videos[vidNum].steps; y++){
-    knobs[knobNum].setCell(originStep,0,true);
-    originStep++;
-    if (originStep > 3) {
-      originStep = 0;
-    }
-  }
-
-  // var finalArray = [];
-  // finalArray.push(stepArray);
-  // knobs[knobNum].matrix = finalArray;
-  // knobs[knobNum].draw();
-
 }
 
 $(document).ready(addVideos);

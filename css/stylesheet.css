@@ -13,94 +13,25 @@ body {
   margin-top: 0px;
 }
 
-h1, h2{
-  text-align: center;
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 300;
-}
-
-h2{
-  font-size: 1.1em;
-}
-
-.subtitle {
-  text-align: center;
-}
-
-button {
-  background-color: #f7f7f7;
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 12px;
-  padding-right: 12px;
-  border-style: solid;
-  border-color: #1E90FF;
-  color: #1E90FF;
-}
-
-button:hover {
-  background-color: #1E90FF;
-  color: #f7f7f7;
-}
-
-button:focus {
-  outline:none;
-  background-color: #5babfa;
-}
-
-
-.video_container {
-  margin-left: auto;
-  margin-right: auto;
-  width: 500px;
-  height: 500px;
-  background-color: #222;
-  background-position: center center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-}
 
 #video {
-  /*object-fit: cover;
-  position: fixed;
-  align-items: center;
-  align-content: center;
-  align-self: center;*/
   margin-left: -46%;
 }
 
-
-/****************************
-            TEST
-****************************/
 .row{
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  /*height: 25%;*/
-  /*margin-bottom: 1%;*/
-  /*background-color: red;*/
-  /*background-position: center center;
-  background-repeat: no-repeat;
-  overflow: hidden;*/
 }
 
 .video_screen{
   margin-left: 2%;
   margin-right: 2%;
-  /*margin-top: 1%;*/
-  /*margin-bottom: 1%;*/
   width: 20.7%;
-  /*height: 80%;*/
-  /*background-color: #fafafa;*/
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden;
   border-color: #eee;
-  /*border-color: red;*/
-  /*border-width: 4px;*/
-  /*border-style: solid;*/
-  /*border-radius: 6px;*/
   display: inline-block;
   text-align: center;
   filter: grayscale(100%);
@@ -111,16 +42,13 @@ button:focus {
 }
 
 .all_videos{
-  /*margin-bottom: 60px;*/
   text-align: center;
   margin-top: 2%;
-  /*height: 600px;*/
 }
 
 .knobs {
   text-align: center;
   margin-top: 2%;
-  /*background-color: pink;*/
   display: none;
 }
 
@@ -132,17 +60,7 @@ button:focus {
   z-index: 100;
   display: none;
   padding-left: 10px;
-  /*filter: blur(1px);*/
-  /*background-color: rgba(0,0,0,0.2);*/
 }
-/*
-.blur{
-  width: 30px;
-  height: 100%;
-  z-index: 50;
-  filter: blur(1px);
-  float: left;
-}*/
 
 canvas{
   height: 30px;
@@ -151,110 +69,8 @@ canvas{
   margin-top: 0.2em;
 }
 
-.attributes{
-  /*background-color: gray;*/
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1%;
-  margin-top: 1%;
-  width: 70%;
-  text-align: center;
-}
-
-.steps_line{
-  /*background-color: pink;*/
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1%;
-  margin-top: 0px;
-  /*width: 70%;*/
-  text-align: center;
-  display: none;
-}
-
-.steps_line_small{
-  margin-left: auto;
-  margin-right: auto;
-  width: 96%;
-}
-
-.step {
-  /*background-color: #F7941D;*/
-  /*background-color: #FFA33E;*/
-  /*background-color: #ffe5c9;*/
-  background-color: #EDEDF4;
-  width: 24.25%;
-  height: 3px;
-  display: inline-block;
-  text-align: center;
-}
-
-.step_small{
-  /*background-color: red;*/
-  width: 20%;
-  height: 3px;
-  margin-left: 0.5%;
-  margin-right: 0.5%;
-  display: inline-block;
-  text-align: center;
-}
-
-.volume_icon {
-  /*background-color: #A5DCE0;*/
-  width: 32.6%;
-  /*height: 20px;*/
-  display: inline-block;
-}
-
-.cut_icon {
-  /*background-color: #A5DCE0;*/
-  width: 32.6%;
-  /*height: 20px;*/
-  display: inline-block;
-}
-
-.speed_icon {
-  /*background-color: #A5DCE0;*/
-  width: 32.6%;
-  /*height: 20px;*/
-  display: inline-block;
-}
-
-.attribute_div {
-  width: 32.6%;
-  height: 20px;
-  display: inline-block;
-}
-
-.volume {
-  /*background-color: #A5DCE0;*/
-  background-color: #B10F2E;
-  /*width: 32.6%;*/
-  height: 20px;
-  width: 10px;
-  /*display: inline-block;*/
-}
-
-.speed {
-  /*background-color: #9B85BE;*/
-  background-color: #B10F2E;
-  /*width: 32.6%;*/
-  height: 20px;
-  width: 10px;
-  /*display: inline-block;*/
-}
-
-.cut {
-  /*background-color: #80CAA5;*/
-  background-color: #B10F2E;
-  /*width: 32.6%;*/
-  height: 20px;
-  width: 10px;
-  /*display: inline-block;*/
-}
 
 video{
-  /*border: 8px solid rgba(177,15,46,1);*/
   border-radius: 4px;
   border-color: rgba(177,15,46,0);
   border-style: solid;
@@ -263,18 +79,6 @@ video{
 
 .gif {
   display: inline-block;
-  /*text-align: center;*/
   width:48%;
   color: rgba(255,255,255,0.9);
-}
-
-#video1, #video2, #video3, #video4, #video5, #video6, #video7, #video8, #video9 {
-  /*object-fit: cover;
-  position: fixed;
-  align-items: center;
-  align-content: center;
-  align-self: center;*/
-  /*margin-left: -25%;*/
-  /*border-radius: 6px;*/
-
 }
