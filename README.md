@@ -21,7 +21,7 @@ Only the videos that are being played, are being heard.
 [Watch a demo of NOMNOM 2 in action](https://www.youtube.com/watch?v=qz55SNFeUBI)
 
 ### Functionality
-On its first version, The Video Machine controller offers three functions:
+On its first version, The Video Machine controller offers four functions:
 - **Repetition** - Affects The number of times a video is being played during a single loop (1-4 times).
 - **Volume** - Affects the volume of the selected video.
 - **Speed** - Changes the speed of the selected video.
