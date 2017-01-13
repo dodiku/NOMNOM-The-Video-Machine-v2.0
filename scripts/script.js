@@ -8,7 +8,7 @@ FOR MORE DETAILS GO TO: https://github.com/dodiku/the_video_machine_v2
 SERIAL COMMUNICATION VARIABLES
 *********************************************/
 var serial;
-var portName = '/dev/cu.usbmodemFA131';
+var portName = '/dev/cu.usbmodem14621';
 
 
 /*********************************************
